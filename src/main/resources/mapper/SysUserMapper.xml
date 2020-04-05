@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.json.web.dao.SysUserDao">
+	<resultMap type="com.json.web.entity.SysUser" id="BaseSysUser">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="pass_word" property="passWord" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="created_date" property="createdDate" jdbcType="DATE" />
+		<result column="modified_date" property="modifiedDate"
+			jdbcType="DATE" />
+	</resultMap> 
+
+	<select id="findUsers" resultType="map">
+		select
+		user_name,pass_word,phone from sys_users
+	</select>
+
+<!-- 	<insert id="insertObject" parameterType="sysUser"> insert into
+		sys_users(user_name,pass_word,phone,created_date,modified_date)
+		values(#{userName},#{passWord},#{phone},#{createdDate},#{modifiedDate})
+	</insert>  -->
+
+	<!-- useGeneratedKeys的值为true,表示要使用ID自增，获取到这个值以后,要将这个值 赋值给sysUser对象的 keyProperty指向 
+		的属性 -->
+	<insert id="insertObject" parameterType="sysUser"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		sys_users(id,user_name,pass_word,phone,created_date,modified_date)
+		values(null,#{userName},#{passWord},#{phone},now(),now())
+	</insert>
+
+	<select id="findById" parameterType="int" resultType="sysUser">
+		select
+		user_name,pass_word,phone from sys_users where id=#{id}
+	</select>
+<!-- collection参数类型 -->
+	<delete id="removeByIds" >
+		delete from sys_users where id in
+		<foreach collection="array" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</delete>
+
+
+</mapper>

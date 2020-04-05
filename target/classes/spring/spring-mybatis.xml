@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+
+	<!-- 连接数据库 -->
+	<!-- <bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:jdbc.properties" />
+	</bean> -->
+
+	<!-- c3p0连接池 , -->
+	<!-- <bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="maxPoolSize" value="30" />
+		<property name="minPoolSize" value="10" />
+		关闭连接不自动commit
+		<property name="autoCommitOnClose" value="false" />
+		连接超时时间
+		<property name="checkoutTimeout" value="10000" />
+		连接失败重试次数
+		<property name="acquireRetryAttempts" value="2" />
+	</bean> -->
+
+    <!-- 配置DRUID连接池 -->
+    <util:properties id="cfg" location="classpath:jdbc.properties"/>
+    
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close" init-method="init" lazy-init="true">
+		<property name="driverClassName" value="#{cfg.driver}" />
+		<property name="url" value="#{cfg.url}" />
+		<property name="username" value="#{cfg.username}" />
+		<property name="password" value="#{cfg.password}" />
+    </bean>
+
+
+	<!-- 创建SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="druidDataSource" />
+		<!-- 扫描实体类，使用别名(user) -->
+		<property name="typeAliasesPackage" value="com.json.web.entity" />
+		<property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+	</bean>
+
+	<!-- Mapper接口扫描器配置 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.json.web.dao"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+</beans>

@@ -1,0 +1,20 @@
+
+
+1. ssm框架
+2. mysql5.6
+3. API接口文档：
+全国车辆违章
+https://www.juhe.cn/docs/api/id/36
+来电号码显示
+https://www.juhe.cn/docs/api/id/511
+菜谱大全数据
+https://www.juhe.cn/docs/api/id/46
+
+4.  项目下载地址
+
+https://github.com/zhihuiwang88
+
+
+
+
+

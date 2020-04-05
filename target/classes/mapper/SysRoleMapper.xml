@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.json.web.dao.SysRoleDao">
+	<resultMap type="com.json.web.entity.SysRole" id="ResultMapRole">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="note" property="note" jdbcType="VARCHAR" />
+		<result column="created_user" property="createdUser" jdbcType="VARCHAR" />
+		<result column="modified_user" property="modifiedUser"
+			jdbcType="VARCHAR" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="modified_time" property="modifiedTime"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+<select id="findPageObjects" resultMap="ResultMapRole">
+	select id,name,note,created_user,modified_user,created_time,modified_time  from sys_role
+</select>
+
+<insert id="insertObject" parameterType="sysRole">
+	insert into sys_role(name,note,created_user,modified_user,created_time,modified_time) 
+	values(#{name},#{note},#{createdUser},#{modifiedUser},now(),now())
+</insert>
+
+
+<update id="updateObject" parameterType="sysRole">
+	update sys_role set
+	<if test="name!='' || name!=null">
+		name=#{name},
+	</if>
+	note=#{note},created_user=#{createdUser},
+	<if test="modifiedUser != null">
+		modified_user=#{modifiedUser},
+	</if>
+	modified_time=now()
+	where id = #{id}
+</update>
+
+
+
+
+
+
+
+
+<select id="findObjectById" parameterType="int" resultMap="ResultMapRole">
+	select id,name,note,created_user,modified_user,created_time,modified_time 
+	from sys_role where id=#{id}
+</select>
+
+</mapper>
+  

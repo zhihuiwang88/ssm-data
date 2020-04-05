@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.json.web.dao.CarCityMapper">
+	<resultMap id="BaseResultMap" type="com.json.web.entity.CarCity">
+		<id column="city_id" property="cityId" jdbcType="INTEGER" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+		<result column="abbr" property="abbr" jdbcType="VARCHAR" />
+		<result column="engine_num" property="engineNum" jdbcType="VARCHAR" />
+		<result column="engineno_num" property="enginenoNum" jdbcType="VARCHAR" />
+		<result column="class_num" property="classNum" jdbcType="VARCHAR" />
+		<result column="classno_num" property="classnoNum" jdbcType="VARCHAR" />
+		<result column="regist_num" property="registNum" jdbcType="VARCHAR" />
+		<result column="registno_num" property="registnoNum" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select city_name,city_code from car_city
+	</select>
+
+	<insert id="insertData" parameterType="carCity">
+		insert into
+		car_city(city_name,city_code,abbr,engine_num,engineno_num,class_num,classno_num,regist_num,registno_num,create_time,update_time)
+		values(#{cityName},#{cityCode},#{abbr},#{engineNum},#{enginenoNum},#{classNum},
+		#{classnoNum},#{registNum},#{registnoNum},now(),now())
+	</insert>
+
+<insert id="addObject" parameterType="carCity">
+	insert into
+	car_city(city_name,city_code,abbr,engine_num,engineno_num,class_num,classno_num,regist_num,registno_num,create_time,update_time)
+	values(#{rty.cityName},#{rty.cityCode},#{rty.abbr},#{rty.engineNum},
+	#{rty.enginenoNum},#{rty.classNum},#{rty.classnoNum},#{rty.registNum},
+	#{rty.registnoNum},now(),now())
+</insert>
+
+
+	<select id="findByNameAndCode" parameterType="string" resultMap="BaseResultMap">
+		select city_name,city_code,abbr,engine_num,engineno_num,
+		class_num,classno_num,regist_num,registno_num from car_city
+		where
+		city_name=#{cityname} and city_code=#{cityCode}
+	</select>
+
+	<select id="likeEngineNum" resultMap="BaseResultMap">
+		select
+		city_name,city_code,abbr,engine_num,engineno_num,
+		class_num,classno_num,regist_num,registno_num from car_city
+		where
+		engine_num like concat('%',#{enginenum},'%')
+	</select>
+	
+	<update id="updateById" parameterType="carCity" >
+	update car_city set city_name=#{cityName},city_code=#{cityCode},
+	  class_num=#{classNum},regist_num=#{registNum} where city_id=#{cityId}
+	</update>
+<!-- collection填写Dao中的参数类型 -->
+	<delete id="removeIds">
+		delete from car_city where city_id in
+		<foreach collection="array" open="(" close=")" item="cityId"
+			separator=",">
+			#{cityId}
+		</foreach>
+	</delete>
+	
+<select id="findIds" resultMap="BaseResultMap">
+	select city_name,city_code,abbr,engine_num,engineno_num from car_city
+	where
+	city_id in
+	<foreach collection="array" open="(" close=")" item="cityId"
+		separator=",">
+		#{cityId}
+	</foreach>
+</select>
+
+</mapper>
